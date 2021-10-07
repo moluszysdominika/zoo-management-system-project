@@ -15,6 +15,17 @@ interface IBaseAnimal
 interface IAnimalInformationDisplay
 {
     public function displayInformationForAnimal(IBaseAnimal $animal): string;
+    public function displayAmountOfFeed(int $numberOfDays, float $amountOfFeed): string;
+}
+
+interface ISummedWeightCalculator
+{
+    public function calculateAllAnimalsSummedWeight(array $animals): int;
+}
+
+interface IAmountOfFeedCalculator
+{
+    public function calculateAmountOfFeed(array $animals, int $numberOfDays): string;
 }
 
 
@@ -117,6 +128,44 @@ class Employee extends BaseAnimal
     protected string $call = "Wreee!";
 }
 
+class SummedWeightCalculator implements ISummedWeightCalculator
+{
+    public function calculateAllAnimalsSummedWeight(array $animals): int
+    {
+        $summedWeight = 0;
+
+        foreach ($animals as $animal) {
+            $summedWeight += $animal->getWeight();
+        }
+
+        return $summedWeight;
+    }
+}
+
+class AmountOfFeedCalculator implements IAmountOfFeedCalculator
+{
+    private IAnimalInformationDisplay $animalInformationDisplay;
+
+
+    public function __construct(IAnimalInformationDisplay $animalInformationDisplay)
+    {
+        $this->animalInformationDisplay = $animalInformationDisplay;
+    }
+
+    public function calculateAmountOfFeed(array $animals, int $numberOfDays): string
+    {
+        $summedWeight = 0;
+
+        foreach ($animals as $animal) {
+            if ($animal->getChip()->getSpecies() !== "człowiek") {
+                $summedWeight += $animal->getWeight();
+            }
+        }
+
+        return ($numberOfDays * $summedWeight)/30;
+    }
+}
+
 class PolishAnimalInformationDisplay implements IAnimalInformationDisplay
 {
     public function displayInformationForAnimal(IBaseAnimal $animal): string
@@ -128,6 +177,13 @@ class PolishAnimalInformationDisplay implements IAnimalInformationDisplay
             ma {$animalChip->getAge()} lat. $animalName, daj głos! {$animal->getCall()} $animalName 
             ma numer identyfikacyjny {$animalChip->getIdNumber()}. $animalName przybył do ZOO 
             {$animalChip->getAdmissionDate()}. ";
+
+        return $text;
+    }
+
+    public function displayAmountOfFeed(int $numberOfDays, float $amountOfFeed): string
+    {
+        $text = "Ilość karmy potrzebna dla wszystkich zwierząt w Zoo na $numberOfDays dni to: $amountOfFeed kg.";
 
         return $text;
     }
@@ -147,16 +203,29 @@ class EnglishAnimalInformationDisplay implements IAnimalInformationDisplay
 
         return $text;
     }
+
+    public function displayAmountOfFeed(int $numberOfDays, float $amountOfFeed): string
+    {
+        $text = "The amount of food needed for all animals in the Zoo for $numberOfDays days is $amountOfFeed kg.";
+
+        return $text;
+    }
 }
+
 
 class Zoo
 {
     protected array $animals = [];
     private IAnimalInformationDisplay $animalInformationDisplay;
+    private IAmountOfFeedCalculator $amountOfFeedCalculator;
+    private ISummedWeightCalculator $summedWeightCalculator;
 
-    public function __construct(IAnimalInformationDisplay $animalInformationDisplay)
+
+    public function __construct(IAnimalInformationDisplay $animalInformationDisplay, IAmountOfFeedCalculator $amountOfFeedCalculator, ISummedWeightCalculator $summedWeightCalculator)
     {
         $this->animalInformationDisplay = $animalInformationDisplay;
+        $this->amountOfFeedCalculator = $amountOfFeedCalculator;
+        $this->summedWeightCalculator = $summedWeightCalculator;
     }
 
     private function hasAnimalWithId(string $IdNumber): bool
@@ -246,47 +315,36 @@ class Zoo
 
     public function getAllAnimalsSummedWeight(): int
     {
-        $summedWeight = 0;
-
-        foreach ($this->animals as $animal) {
-            $summedWeight += $animal->getWeight();
-        }
-
-        return $summedWeight;
+        return $this->summedWeightCalculator->calculateAllAnimalsSummedWeight($this->animals);
     }
 
-    public function calculateAmountOfFeed(int $numberOfDays): string
+    public function calculateAmountOfFeedForAnimals(int $numberOfDays) : string
     {
-        $summedWeight = 0;
+        $amountOfFeed = $this->amountOfFeedCalculator->calculateAmountOfFeed($this->animals, $numberOfDays);
 
-        foreach ($this->animals as $animal) {
-            if ($animal->getChip()->getSpecies() !== "human") {
-                $summedWeight += $animal->getWeight();
-            }
-        }
-        $amountOfFeed = ($numberOfDays * $summedWeight)/30;
-
-        return "Ilość karmy potrzebna dla wszystkich zwierząt w Zoo na $numberOfDays dni to: $amountOfFeed kg.";
+        return $this->animalInformationDisplay->displayAmountOfFeed($numberOfDays, $amountOfFeed);
     }
 }
 
 $animalInformationDisplay = new EnglishAnimalInformationDisplay();
-$zooService = new Zoo($animalInformationDisplay);
+$summedWeightCalculator = new SummedWeightCalculator();
+$amountOfFeedCalculator = new AmountOfFeedCalculator($animalInformationDisplay);
+$zooService = new Zoo($animalInformationDisplay, $amountOfFeedCalculator, $summedWeightCalculator);
 
 
-$cat1Chip = new Chip("NA-1234", "Nami", new DateTime("2015-07-23 15:00:00"), "cat");
+$cat1Chip = new Chip("NA-1234", "Nami", new DateTime("2015-07-23 15:00:00"), "kot");
 $cat1 = new Cat(3);
 
-$cat2Chip = new Chip("RA-1234", "Nami", new DateTime("2017-11-05 17:25:00"), "cat");
+$cat2Chip = new Chip("RA-1234", "Nami", new DateTime("2017-11-05 17:25:00"), "kot");
 $cat2 = new Cat(3);
 
-$dog1Chip = new Chip("DA-1234", "Dami", new DateTime("2020-01-17 23:57:00"), "dog");
+$dog1Chip = new Chip("DA-1234", "Dami", new DateTime("2020-01-17 23:57:00"), "pies");
 $dog1 = new Dog(3);
 
-$boar1Chip = new Chip("SA-1234", "Sami", new DateTime("2016-06-15 18:20:40"), "boar");
+$boar1Chip = new Chip("SA-1234", "Sami", new DateTime("2016-06-15 18:20:40"), "dzik");
 $boar1 = new Boar(3);
 
-$employee1Chip = new Chip("AN-1234", "Anna Nowak", new DateTime("1995-03-04 10:23:42"), "human");
+$employee1Chip = new Chip("AN-1234", "Anna Nowak", new DateTime("1995-03-04 10:23:42"), "człowiek");
 $employee1 = new Employee(52);
 
 
@@ -297,7 +355,7 @@ $zooService->addAnimal($boar1, $boar1Chip);
 $zooService->addAnimal($employee1, $employee1Chip);
 //$zooService->removeAnimal("RA-1234");
 //var_dump($zooService->showAllAnimals());
-//var_dump($zooService->showAllAnimalsBySpecies("cat"));
+//var_dump($zooService->showAllAnimalsBySpecies("kot"));
 //var_dump($zooService->showAnimal($cat1Chip->getIdNumber()));
 //var_dump($zooService->getAllAnimalsSummedWeight());
-var_dump($zooService->calculateAmountOfFeed(12));
+//var_dump($zooService->calculateAmountOfFeedForAnimals(12));
