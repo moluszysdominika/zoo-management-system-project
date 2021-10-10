@@ -1,9 +1,8 @@
 <?php
 
 namespace Zoo\Animal;
+
 use Zoo\Chip\Chip;
-
-
 
 abstract class BaseAnimal implements IBaseAnimal
 {

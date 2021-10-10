@@ -1,13 +1,12 @@
 <?php
 
 namespace Zoo\AmountOfFeedCalculator;
-use Zoo\SummedWeightCalculator\ISummedWeightCalculator;
 
+use Zoo\SummedWeightCalculator\ISummedWeightCalculator;
 
 class AmountOfFeedCalculator implements IAmountOfFeedCalculator
 {
     private ISummedWeightCalculator $summedWeightCalculator;
-
 
     public function __construct(ISummedWeightCalculator $summedWeightCalculator)
     {
@@ -18,6 +17,6 @@ class AmountOfFeedCalculator implements IAmountOfFeedCalculator
     {
         $summedWeight = $this->summedWeightCalculator->calculateAllAnimalsSummedWeightWithoutHumans($animals);
 
-        return ($numberOfDays * $summedWeight)/30;
+        return ($numberOfDays * $summedWeight) / 30;
     }
 }

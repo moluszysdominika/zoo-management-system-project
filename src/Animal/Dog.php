@@ -2,8 +2,6 @@
 
 namespace Zoo\Animal;
 
-
-
 class Dog extends BaseAnimal
 {
     protected string $call = "Woof!";

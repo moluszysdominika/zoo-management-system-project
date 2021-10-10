@@ -1,24 +1,14 @@
 <?php
 
 namespace Zoo\Service;
-use DateTime;
+
 use Exception;
-use Zoo\AmountOfFeedCalculator\AmountOfFeedCalculator;
 use Zoo\AmountOfFeedCalculator\IAmountOfFeedCalculator;
 use Zoo\Animal\BaseAnimal;
-use Zoo\Animal\Boar;
-use Zoo\Animal\Cat;
-use Zoo\Animal\Dog;
-use Zoo\Animal\Employee;
 use Zoo\Animal\IBaseAnimal;
-use Zoo\AnimalInformationDisplay\EnglishAnimalInformationDisplay;
 use Zoo\AnimalInformationDisplay\IAnimalInformationDisplay;
-use Zoo\AnimalInformationDisplay\PolishAnimalInformationDisplay;
 use Zoo\Chip\Chip;
 use Zoo\SummedWeightCalculator\ISummedWeightCalculator;
-use Zoo\SummedWeightCalculator\SummedWeightCalculator;
-
-
 
 class Zoo
 {
@@ -27,9 +17,11 @@ class Zoo
     private IAmountOfFeedCalculator $amountOfFeedCalculator;
     private ISummedWeightCalculator $summedWeightCalculator;
 
-
-    public function __construct(IAnimalInformationDisplay $animalInformationDisplay, IAmountOfFeedCalculator $amountOfFeedCalculator, ISummedWeightCalculator $summedWeightCalculator)
-    {
+    public function __construct(
+        IAnimalInformationDisplay $animalInformationDisplay,
+        IAmountOfFeedCalculator $amountOfFeedCalculator,
+        ISummedWeightCalculator $summedWeightCalculator
+    ) {
         $this->animalInformationDisplay = $animalInformationDisplay;
         $this->amountOfFeedCalculator = $amountOfFeedCalculator;
         $this->summedWeightCalculator = $summedWeightCalculator;
@@ -37,8 +29,8 @@ class Zoo
 
     private function hasAnimalWithId(string $IdNumber): bool
     {
-        foreach($this->animals as $animal) {
-            if($animal->getChip()->getIdNumber() === $IdNumber) {
+        foreach ($this->animals as $animal) {
+            if ($animal->getChip()->getIdNumber() === $IdNumber) {
                 return true;
             }
         }
@@ -48,7 +40,7 @@ class Zoo
 
     public function addAnimal(BaseAnimal $animal, Chip $chip): void
     {
-        if($this->hasAnimalWithId($chip->getIdNumber())) {
+        if ($this->hasAnimalWithId($chip->getIdNumber())) {
             throw new Exception("Zwierzę o ID " . $chip->getIdNumber() . " już znajduje się w Zoo!");
         }
 
@@ -58,8 +50,8 @@ class Zoo
 
     private function findAnimalById(string $IdNumber): IBaseAnimal
     {
-        foreach($this->animals as $animal) {
-            if($animal->getChip()->getIdNumber() === $IdNumber) {
+        foreach ($this->animals as $animal) {
+            if ($animal->getChip()->getIdNumber() === $IdNumber) {
                 return $animal;
             }
         }
@@ -105,8 +97,8 @@ class Zoo
 
     private function findAnimalKeyById(string $IdNumber): int
     {
-        foreach($this->animals as $key => $animal) {
-            if($animal->getChip()->getIdNumber() === $IdNumber) {
+        foreach ($this->animals as $key => $animal) {
+            if ($animal->getChip()->getIdNumber() === $IdNumber) {
                 return $key;
             }
         }
@@ -125,7 +117,7 @@ class Zoo
         return $this->summedWeightCalculator->calculateAllAnimalsSummedWeight($this->animals);
     }
 
-    public function calculateAmountOfFeedForAnimals(int $numberOfDays) : string
+    public function calculateAmountOfFeedForAnimals(int $numberOfDays): string
     {
         $amountOfFeed = $this->amountOfFeedCalculator->calculateAmountOfFeed($this->animals, $numberOfDays);
 

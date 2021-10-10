@@ -1,9 +1,8 @@
 <?php
 
 namespace Zoo\Chip;
+
 use DateTime;
-
-
 
 class Chip
 {

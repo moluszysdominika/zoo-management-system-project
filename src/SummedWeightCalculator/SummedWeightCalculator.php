@@ -1,9 +1,8 @@
 <?php
 
 namespace Zoo\SummedWeightCalculator;
+
 use Zoo\Animal\Employee;
-
-
 
 class SummedWeightCalculator implements ISummedWeightCalculator
 {

@@ -1,6 +1,5 @@
 <?php
 
-
 use Zoo\AmountOfFeedCalculator\AmountOfFeedCalculator;
 use Zoo\Animal\Boar;
 use Zoo\Animal\Cat;
@@ -10,15 +9,13 @@ use Zoo\AnimalInformationDisplay\PolishAnimalInformationDisplay;
 use Zoo\Chip\Chip;
 use Zoo\Service\Zoo;
 use Zoo\SummedWeightCalculator\SummedWeightCalculator;
-require 'vendor/autoload.php';
 
-
+require_once 'vendor/autoload.php';
 
 $animalInformationDisplay = new PolishAnimalInformationDisplay();
 $summedWeightCalculator = new SummedWeightCalculator();
 $amountOfFeedCalculator = new AmountOfFeedCalculator($summedWeightCalculator);
 $zooService = new Zoo($animalInformationDisplay, $amountOfFeedCalculator, $summedWeightCalculator);
-
 
 $cat1Chip = new Chip("NA-1234", "Nami", new DateTime("2015-07-23 15:00:00"), Cat::getSpecies());
 $cat1 = new Cat(3);
@@ -34,7 +31,6 @@ $boar1 = new Boar(3);
 
 $employee1Chip = new Chip("AN-1234", "Anna Nowak", new DateTime("1995-03-04 10:23:42"), Employee::getSpecies());
 $employee1 = new Employee(52);
-
 
 $zooService->addAnimal($cat1, $cat1Chip);
 $zooService->addAnimal($cat2, $cat2Chip);

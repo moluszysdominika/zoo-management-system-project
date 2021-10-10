@@ -1,9 +1,8 @@
 <?php
 
 namespace Zoo\AnimalInformationDisplay;
+
 use Zoo\Animal\IBaseAnimal;
-
-
 
 class PolishAnimalInformationDisplay implements IAnimalInformationDisplay
 {
