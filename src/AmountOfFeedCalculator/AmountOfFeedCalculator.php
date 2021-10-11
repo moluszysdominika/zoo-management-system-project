@@ -6,6 +6,8 @@ use Zoo\SummedWeightCalculator\ISummedWeightCalculator;
 
 class AmountOfFeedCalculator implements IAmountOfFeedCalculator
 {
+    private const FOOD_DIVISOR = 30;
+
     private ISummedWeightCalculator $summedWeightCalculator;
 
     public function __construct(ISummedWeightCalculator $summedWeightCalculator)
@@ -17,6 +19,6 @@ class AmountOfFeedCalculator implements IAmountOfFeedCalculator
     {
         $summedWeight = $this->summedWeightCalculator->calculateAllAnimalsSummedWeightWithoutHumans($animals);
 
-        return ($numberOfDays * $summedWeight) / 30;
+        return ($numberOfDays * $summedWeight) / self::FOOD_DIVISOR;
     }
 }
