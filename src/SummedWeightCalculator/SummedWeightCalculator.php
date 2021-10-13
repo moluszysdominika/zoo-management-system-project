@@ -2,29 +2,17 @@
 
 namespace Zoo\SummedWeightCalculator;
 
-use Zoo\Animal\Employee;
-
 class SummedWeightCalculator implements ISummedWeightCalculator
 {
-    public function calculateAllAnimalsSummedWeight(array $animals): int
+    public function calculateAllAnimalsSummedWeight(array $animals, ?string $excludedSpecies = null): int
     {
         $summedWeight = 0;
 
         foreach ($animals as $animal) {
-            $summedWeight += $animal->getWeight();
-        }
-
-        return $summedWeight;
-    }
-
-    public function calculateAllAnimalsSummedWeightWithoutHumans(array $animals): int
-    {
-        $summedWeight = 0;
-
-        foreach ($animals as $animal) {
-            if ($animal->getChip()->getSpecies() !== Employee::getSpecies()) {
-                $summedWeight += $animal->getWeight();
+            if ($animal->getChip()->getSpecies() === $excludedSpecies) {
+                continue;
             }
+            $summedWeight += $animal->getWeight();
         }
 
         return $summedWeight;
