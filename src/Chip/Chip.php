@@ -9,15 +9,14 @@ class Chip
     private string $IdNumber;
     private string $name;
     private DateTime $birthDate;
-    private string $species;
+    protected string $species;
     private DateTime $admissionDate;
 
-    public function __construct(string $IdNumber, string $name, DateTime $birthDate, string $species)
+    public function __construct(string $IdNumber, string $name, DateTime $birthDate)
     {
         $this->IdNumber = $IdNumber;
         $this->name = $name;
         $this->birthDate = $birthDate;
-        $this->species = $species;
         $this->admissionDate = new DateTime();
     }
 
@@ -37,9 +36,9 @@ class Chip
         return $this->birthDate->diff($date)->y;
     }
 
-    public function getSpecies(): string
+    public function setSpecies(string $species): void
     {
-        return $this->species;
+        $this->species = $species;
     }
 
     public function getAdmissionDate(): string

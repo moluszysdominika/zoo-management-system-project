@@ -15,9 +15,9 @@ class AmountOfFeedCalculator implements IAmountOfFeedCalculator
         $this->summedWeightCalculator = $summedWeightCalculator;
     }
 
-    public function calculateAmountOfFeed(array $animals, int $numberOfDays): string
+    public function calculateAmountOfFeed(array $animals, int $numberOfDays, ?string $excludedSpecies = null): string
     {
-        $summedWeight = $this->summedWeightCalculator->calculateAllAnimalsSummedWeightWithoutHumans($animals);
+        $summedWeight = $this->summedWeightCalculator->calculateAllAnimalsSummedWeight($animals, $excludedSpecies);
 
         return ($numberOfDays * $summedWeight) / self::FOOD_DIVISOR;
     }

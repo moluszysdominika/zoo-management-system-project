@@ -40,6 +40,8 @@ class Zoo
 
     public function addAnimal(BaseAnimal $animal, Chip $chip): void
     {
+        $chip->setSpecies($animal::getSpecies());
+
         if ($this->hasAnimalWithId($chip->getIdNumber())) {
             throw new Exception("Zwierzę o ID " . $chip->getIdNumber() . " już znajduje się w Zoo!");
         }
@@ -86,7 +88,7 @@ class Zoo
         $text = "";
 
         foreach ($allAnimals as $animal) {
-            if ($animal->getChip()->getSpecies() !== $species) {
+            if ($animal->getSpecies() !== $species) {
                 continue;
             }
             $text .= $this->animalInformationDisplay->displayInformationForAnimal($animal) . "\n";
@@ -108,7 +110,6 @@ class Zoo
 
     public function removeAnimal($IdNumber): void
     {
-        $animal = $this->findAnimalById($IdNumber);
         unset($this->animals[$this->findAnimalKeyById($IdNumber)]);
     }
 
@@ -117,9 +118,9 @@ class Zoo
         return $this->summedWeightCalculator->calculateAllAnimalsSummedWeight($this->animals);
     }
 
-    public function calculateAmountOfFeedForAnimals(int $numberOfDays): string
+    public function calculateAmountOfFeedForAnimals(int $numberOfDays, ?string $excludedSpecies = null): string
     {
-        $amountOfFeed = $this->amountOfFeedCalculator->calculateAmountOfFeed($this->animals, $numberOfDays);
+        $amountOfFeed = $this->amountOfFeedCalculator->calculateAmountOfFeed($this->animals, $numberOfDays, $excludedSpecies);
 
         return $this->animalInformationDisplay->displayAmountOfFeed($numberOfDays, $amountOfFeed);
     }

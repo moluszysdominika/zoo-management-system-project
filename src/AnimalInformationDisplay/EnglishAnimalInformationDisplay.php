@@ -9,9 +9,9 @@ class EnglishAnimalInformationDisplay implements IAnimalInformationDisplay
     public function displayInformationForAnimal(IBaseAnimal $animal): string
     {
         $animalChip = $animal->getChip();
-        $animalName = $animal->getChip()->getName();
+        $animalName = $animalChip->getName();
 
-        $text = "This is $animalName. $animalName is a {$animalChip->getSpecies()}. $animalName is 
+        $text = "This is $animalName. $animalName is a {$animal->getSpecies()}. $animalName is 
         {$animalChip->getAge()} years old. $animalName, give a voice! {$animal->getCall()} $animalName's 
         ID number is {$animalChip->getIdNumber()}. $animalName came to the Zoo in 
         {$animalChip->getAdmissionDate()}. ";

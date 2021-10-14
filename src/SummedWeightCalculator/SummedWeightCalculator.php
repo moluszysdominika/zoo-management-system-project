@@ -9,7 +9,7 @@ class SummedWeightCalculator implements ISummedWeightCalculator
         $summedWeight = 0;
 
         foreach ($animals as $animal) {
-            if ($animal->getChip()->getSpecies() === $excludedSpecies) {
+            if ($animal->getSpecies() === $excludedSpecies) {
                 continue;
             }
             $summedWeight += $animal->getWeight();
