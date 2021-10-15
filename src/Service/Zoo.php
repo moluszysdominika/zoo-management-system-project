@@ -50,6 +50,22 @@ class Zoo
         $this->animals[] = $animal;
     }
 
+    private function showAnimalInformation(IBaseAnimal $animal): string
+    {
+        return $this->animalInformationDisplay->displayInformationForAnimal($animal);
+    }
+
+    private function showAllAnimalsInfromation(array $animals): string
+    {
+        $text = "";
+
+        foreach ($animals as $animal) {
+            $text .= $this->showAnimalInformation($animal) . "\n";
+        }
+
+        return $text;
+    }
+
     private function findAnimalById(string $IdNumber): IBaseAnimal
     {
         foreach ($this->animals as $animal) {
@@ -65,36 +81,19 @@ class Zoo
     {
         $animal = $this->findAnimalById($IdNumber);
 
-        return $this->animalInformationDisplay->displayInformationForAnimal($animal);
+        return $this->showAnimalInformation($animal);
     }
 
     public function showAllAnimals(): string
     {
-        $allAnimals = $this->animals;
-
-        $text = "";
-
-        foreach ($allAnimals as $animal) {
-            $text .= $this->animalInformationDisplay->displayInformationForAnimal($animal) . "\n";
-        }
-
-        return $text;
+        return $this->showAllAnimalsInfromation($this->animals);
     }
 
     public function showAllAnimalsBySpecies(string $species): string
     {
-        $allAnimals = $this->animals;
+        $filteredAnimals = array_filter($this->animals, fn (IBaseAnimal $animal) => $animal->getSpecies() === $species);
 
-        $text = "";
-
-        foreach ($allAnimals as $animal) {
-            if ($animal->getSpecies() !== $species) {
-                continue;
-            }
-            $text .= $this->animalInformationDisplay->displayInformationForAnimal($animal) . "\n";
-        }
-
-        return $text;
+        return $this->showAllAnimalsInfromation($filteredAnimals);
     }
 
     private function findAnimalKeyById(string $IdNumber): int
