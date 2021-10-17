@@ -2,17 +2,17 @@
 
 namespace Zoo\AnimalInformationDisplay;
 
-use Zoo\Animal\IBaseAnimal;
+use Zoo\Animal\ChippedAnimal;
 
 class EnglishAnimalInformationDisplay implements IAnimalInformationDisplay
 {
-    public function displayInformationForAnimal(IBaseAnimal $animal): string
+    public function displayInformationForAnimal(ChippedAnimal $chippedAnimal): string
     {
-        $animalChip = $animal->getChip();
+        $animalChip = $chippedAnimal->getChip();
         $animalName = $animalChip->getName();
 
-        $text = "This is $animalName. $animalName is a {$animal->getSpecies()}. $animalName is 
-        {$animalChip->getAge()} years old. $animalName, give a voice! {$animal->getCall()} $animalName's 
+        $text = "This is $animalName. $animalName is a {$animalChip->getSpecies()}. $animalName is 
+        {$animalChip->getAge()} years old. $animalName, give a voice! {$chippedAnimal->getAnimal()->getCall()} $animalName's 
         ID number is {$animalChip->getIdNumber()}. $animalName came to the Zoo in 
         {$animalChip->getAdmissionDate()}. ";
 

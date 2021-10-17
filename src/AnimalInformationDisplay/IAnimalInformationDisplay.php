@@ -2,10 +2,10 @@
 
 namespace Zoo\AnimalInformationDisplay;
 
-use Zoo\Animal\IBaseAnimal;
+use Zoo\Animal\ChippedAnimal;
 
 interface IAnimalInformationDisplay
 {
-    public function displayInformationForAnimal(IBaseAnimal $animal): string;
+    public function displayInformationForAnimal(ChippedAnimal $chippedAnimal): string;
     public function displayAmountOfFeed(int $numberOfDays, float $amountOfFeed): string;
 }

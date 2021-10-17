@@ -5,7 +5,7 @@ namespace Zoo\Service;
 use Exception;
 use Zoo\AmountOfFeedCalculator\IAmountOfFeedCalculator;
 use Zoo\Animal\BaseAnimal;
-use Zoo\Animal\IBaseAnimal;
+use Zoo\Animal\ChippedAnimal;
 use Zoo\AnimalInformationDisplay\IAnimalInformationDisplay;
 use Zoo\Chip\Chip;
 use Zoo\SummedWeightCalculator\ISummedWeightCalculator;
@@ -46,13 +46,23 @@ class Zoo
             throw new Exception("Zwierzę o ID " . $chip->getIdNumber() . " już znajduje się w Zoo!");
         }
 
-        $animal->setChip($chip);
-        $this->animals[] = $animal;
+        $chippedAnimal = new ChippedAnimal($animal, $chip);
+
+        $this->animals[] = $chippedAnimal;
     }
 
-    private function showAnimalInformation(IBaseAnimal $animal): string
+    public function addChippedAnimal(ChippedAnimal $chippedAnimal): void
     {
-        return $this->animalInformationDisplay->displayInformationForAnimal($animal);
+        if ($this->hasAnimalWithId($chippedAnimal->getChip()->getIdNumber())) {
+            throw new Exception("Zwierzę o ID " . $chippedAnimal->getChip()->getIdNumber() . " już znajduje się w Zoo!");
+        }
+
+        $this->animals[] = $chippedAnimal;
+    }
+
+    private function showAnimalInformation(ChippedAnimal $chippedAnimal): string
+    {
+        return $this->animalInformationDisplay->displayInformationForAnimal($chippedAnimal);
     }
 
     private function showAllAnimalsInfromation(array $animals): string
@@ -66,7 +76,7 @@ class Zoo
         return $text;
     }
 
-    private function findAnimalById(string $IdNumber): IBaseAnimal
+    private function findAnimalById(string $IdNumber): ChippedAnimal
     {
         foreach ($this->animals as $animal) {
             if ($animal->getChip()->getIdNumber() === $IdNumber) {
@@ -91,7 +101,8 @@ class Zoo
 
     public function showAllAnimalsBySpecies(string $species): string
     {
-        $filteredAnimals = array_filter($this->animals, fn (IBaseAnimal $animal) => $animal->getSpecies() === $species);
+        $filter = fn (ChippedAnimal $chippedAnimal) => $chippedAnimal->getChip()->getSpecies() === $species;
+        $filteredAnimals = array_filter($this->animals, $filter);
 
         return $this->showAllAnimalsInfromation($filteredAnimals);
     }
